@@ -24,7 +24,7 @@ By the end of this guide, you will have:
 
 ## Phase 1: Provision the Server
 
-### Step 1.1 — Launch an Ubuntu server
+### Step 1.1 - Launch an Ubuntu server
 
 Spin up an **Ubuntu 22.04 LTS** server on your preferred cloud provider. For AWS EC2:
 
@@ -35,7 +35,7 @@ Spin up an **Ubuntu 22.04 LTS** server on your preferred cloud provider. For AWS
 5. Allow inbound traffic on ports 22, 80, and 443 in the security group
 6. Launch the instance and note the public IP address
 
-### Step 1.2 — Point your domain to the server
+### Step 1.2 - Point your domain to the server
 
 Before setting up SSL, create an **A record** in your DNS provider pointing your domain to the server's public IP address and a **CNAME record**. For example:
 
@@ -50,7 +50,7 @@ DNS propagation can take a few minutes up to few hours. You can verify it with:
 nslookup yourdomain.com
 ```
 
-### Step 1.3 — SSH into the server
+### Step 1.3 - SSH into the server
 
 **On Windows (PowerShell):**
 
@@ -75,7 +75,7 @@ ssh -i ~/Downloads/your-key-name.pem ubuntu@YOUR_SERVER_IP
 
 ## Phase 2: Server Hardening
 
-### Step 2.1 — Create the hngdevops user
+### Step 2.1 - Create the hngdevops user
 
 ```bash
 sudo adduser hngdevops
@@ -84,7 +84,7 @@ sudo usermod -aG sudo hngdevops
 
 You will be prompted to set a password. Set one — you will need it for `sudo` commands.
 
-### Step 2.2 — Set up SSH key authentication for hngdevops
+### Step 2.2 - Set up SSH key authentication for hngdevops
 
 Copy your public key to the hngdevops user's authorized_keys file:
 
@@ -104,7 +104,7 @@ ssh -i D:\your-key-name.pem hngdevops@YOUR_SERVER_IP
 
 > **Critical:** Keep your original session open until you confirm the new login works.
 
-### Step 2.3 — Configure passwordless sudo for specific commands
+### Step 2.3 - Configure passwordless sudo for specific commands
 
 The task requires hngdevops to run `sshd -T` and `ufw status` without a password prompt - but only those two commands, not everything.
 
@@ -127,7 +127,7 @@ sudo /usr/sbin/ufw status
 
 Neither command should ask for a password.
 
-### Step 2.4 — Harden SSH configuration
+### Step 2.4 - Harden SSH configuration
 
 ```bash
 sudo nano /etc/ssh/sshd_config
@@ -149,7 +149,7 @@ sudo systemctl restart sshd
 
 > **Warning:** Test login in a new terminal after this step. If key-based auth fails, you will be locked out.
 
-### Step 2.5 — Configure UFW firewall
+### Step 2.5 - Configure UFW firewall
 
 ```bash
 sudo ufw default deny incoming
@@ -167,7 +167,7 @@ The output should show `Status: active` with only ports 22, 80, and 443 allowed.
 
 ## Phase 3: Install and Configure Nginx
 
-### Step 3.1 — Install Nginx
+### Step 3.1 - Install Nginx
 
 ```bash
 sudo apt update && sudo apt install nginx -y
@@ -175,7 +175,7 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
 
-### Step 3.2 — Create the static HTML page
+### Step 3.2 - Create the static HTML page
 
 ```bash
 sudo nano /var/www/html/index.html
