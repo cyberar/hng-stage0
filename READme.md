@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This is a complete walkthrough of the HNG Internship 14 DevOps Track Stage 0 task. The goal is to provision a Linux server from scratch, harden it, configure Nginx to serve a static page and a JSON API endpoint, and secure everything with a valid SSL certificate from Let's Encrypt — no Docker, no Compose, no automation tools.
+This is a complete walkthrough of the HNG Internship 14 DevOps Track Stage 0 task. The goal is to provision a Linux server from scratch, harden it, configure Nginx to serve a static page and a JSON API endpoint, and secure everything with a valid SSL certificate from Let's Encrypt - no Docker, no Compose, no automation tools.
 
 By the end of this guide, you will have:
 
 - A hardened Ubuntu server with a non-root user and key-based SSH only
 - Nginx serving a static HTML page at `/` and a JSON response at `/api`
-- A valid Let's Encrypt SSL certificate with automatic HTTP → HTTPS (301) redirect
+- A valid Let's Encrypt SSL certificate with automatic HTTP -> HTTPS (301) redirect
 - UFW firewall allowing only the required ports
 
 ---
@@ -106,7 +106,7 @@ ssh -i D:\your-key-name.pem hngdevops@YOUR_SERVER_IP
 
 ### Step 2.3 — Configure passwordless sudo for specific commands
 
-The task requires hngdevops to run `sshd -T` and `ufw status` without a password prompt — but only those two commands, not everything.
+The task requires hngdevops to run `sshd -T` and `ufw status` without a password prompt - but only those two commands, not everything.
 
 ```bash
 sudo visudo -f /etc/sudoers.d/hngdevops
@@ -192,14 +192,14 @@ Paste the following (replace `HNG_USERNAME` with your actual username or any nam
 </head>
 <body>
   <h1>HNG_USERNAME</h1>
-  <p>HNG Internship DevOps Track — Stage 0</p>
+  <p>HNG Internship DevOps Track - Stage 0</p>
 </body>
 </html>
 ```
 
 > **Important:** The username must be visible text in the page body. Do not hide it with CSS or put it only in a comment.
 
-### Step 3.3 — Create the Nginx server block
+### Step 3.3 - Create the Nginx server block
 
 ```bash
 sudo nano /etc/nginx/sites-available/hng
@@ -220,7 +220,7 @@ server {
     listen 443 ssl;
     server_name yourdomain.com www.yourdomain.com;
 
-    # SSL certificates — Certbot will populate these in the next phase
+    # SSL certificates - Certbot will populate these in the next phase
     ssl_certificate /etc/letsencrypt/live/yourdomain.com/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
@@ -229,12 +229,12 @@ server {
     root /var/www/html;
     index index.html;
 
-    # GET / — serve the static HTML page
+    # GET / - serve the static HTML page
     location / {
         try_files $uri $uri/ =404;
     }
 
-    # GET /api — return JSON response
+    # GET /api - return JSON response
     location = /api {
         add_header Content-Type application/json;
         return 200 '{"message":"HNGI14 Stage 0","track":"DevOps","username":"HNG_USERNAME"}';
@@ -244,7 +244,7 @@ server {
 
 > **Critical:** The `return 301` redirect must only exist in the port 80 block. If it appears in the 443 block as well, you will get an infinite redirect loop.
 
-### Step 3.4 — Enable the site
+### Step 3.4 - Enable the site
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/hng /etc/nginx/sites-enabled/
@@ -259,13 +259,13 @@ The output must say `syntax is ok` and `test is successful`. If there are errors
 
 ## Phase 4: SSL with Let's Encrypt (Certbot)
 
-### Step 4.1 — Install Certbot
+### Step 4.1 - Install Certbot
 
 ```bash
 sudo apt install certbot python3-certbot-nginx -y
 ```
 
-### Step 4.2 — Obtain the SSL certificate
+### Step 4.2 - Obtain the SSL certificate
 
 ```bash
 sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
@@ -279,7 +279,7 @@ Certbot will:
 
 > **If Certbot fails:** Make sure port 80 is open in UFW (`sudo ufw status`) and that your DNS A record is pointing to the correct IP. Certbot uses HTTP on port 80 to verify you own the domain.
 
-### Step 4.3 — Verify auto-renewal
+### Step 4.3 - Verify auto-renewal (Optional)
 
 Let's Encrypt certificates expire every 90 days. Certbot installs a cron job or systemd timer to handle renewal automatically. Test it:
 
@@ -291,7 +291,7 @@ You should see: `Congratulations, all renewals succeeded.`
 
 Confirm the Nginx config and ensure there are no typos.
 
-### Step 4.4 — Reload Nginx
+### Step 4.4 - Reload Nginx
 
 ```bash
 sudo nginx -t && sudo systemctl reload nginx
